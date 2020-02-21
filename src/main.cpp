@@ -1,6 +1,9 @@
 #include <Arduino.h>
 #include <NewPing.h>
+// #include <StandardCplusplus.h>
+// #include <vector>
 #include "drive.h"
+#include "StackArray.h"
 
 #define TRIGGER_PINL  6  // Arduino pin tied to trigger pin on ping sensor.
 #define ECHO_PINL     7  // Arduino pin tied to echo pin on ping sensor.
@@ -126,6 +129,123 @@ void loop() {
     }
   }
 }
+
+void testSetup() {
+  Serial.begin(9600);
+  pinMode(RMOTOR_1, OUTPUT);
+  pinMode(RMOTOR_2, OUTPUT);
+  pinMode(LMOTOR_1, OUTPUT);
+  pinMode(LMOTOR_2, OUTPUT);
+  pinMode(HBRIDGE_G, OUTPUT);
+  pinMode(SWITCH_IN, INPUT);
+  pinMode(SWITCH_OUT, OUTPUT);
+  digitalWrite(HBRIDGE_G, LOW);
+  digitalWrite(SWITCH_OUT, HIGH);
+  readSonars(sonarReadings);
+  turnLeft(drivePinsL, drivePinsR);
+  delay(50000);
+}
+
+void testLoop() {
+  readSonars(sonarReadings);
+  forwardOneFoot(drivePinsL, drivePinsR, sonarReadings);
+
+  readSonars(sonarReadings);
+  turnLeft(drivePinsL, drivePinsR);
+  readSonars(sonarReadings);
+  forwardOneFoot(drivePinsL, drivePinsR, sonarReadings);
+
+  readSonars(sonarReadings);
+  turnLeft(drivePinsL, drivePinsR);
+  readSonars(sonarReadings);
+  forwardOneFoot(drivePinsL, drivePinsR, sonarReadings);
+
+  readSonars(sonarReadings);
+  turnRight(drivePinsL, drivePinsR);
+  readSonars(sonarReadings);
+  forwardOneFoot(drivePinsL, drivePinsR, sonarReadings);
+
+  readSonars(sonarReadings);
+  turnRight(drivePinsL, drivePinsR);
+  readSonars(sonarReadings);
+  forwardOneFoot(drivePinsL, drivePinsR, sonarReadings);
+  readSonars(sonarReadings);
+  forwardOneFoot(drivePinsL, drivePinsR, sonarReadings);
+
+  readSonars(sonarReadings);
+  turnRight(drivePinsL, drivePinsR);
+  readSonars(sonarReadings);
+  forwardOneFoot(drivePinsL, drivePinsR, sonarReadings);
+  readSonars(sonarReadings);
+  forwardOneFoot(drivePinsL, drivePinsR, sonarReadings);
+
+  readSonars(sonarReadings);
+  turnLeft(drivePinsL, drivePinsR);
+  readSonars(sonarReadings);
+  forwardOneFoot(drivePinsL, drivePinsR, sonarReadings);
+
+  readSonars(sonarReadings);
+  turnLeft(drivePinsL, drivePinsR);
+  readSonars(sonarReadings);
+  forwardOneFoot(drivePinsL, drivePinsR, sonarReadings);
+  readSonars(sonarReadings);
+  forwardOneFoot(drivePinsL, drivePinsR, sonarReadings);
+
+  readSonars(sonarReadings);
+  turnRight(drivePinsL, drivePinsR);
+  readSonars(sonarReadings);
+  forwardOneFoot(drivePinsL, drivePinsR, sonarReadings);
+
+  readSonars(sonarReadings);
+  turnRight(drivePinsL, drivePinsR);
+  readSonars(sonarReadings);
+  forwardOneFoot(drivePinsL, drivePinsR, sonarReadings);
+
+  readSonars(sonarReadings);
+  turnLeft(drivePinsL, drivePinsR);
+  readSonars(sonarReadings);
+  forwardOneFoot(drivePinsL, drivePinsR, sonarReadings);
+}
+
+/*
+class Square {
+public:
+  int x;
+  int y;
+
+  Square(int x, int y) {
+    this->x = x;
+    this->y = y;
+  }
+};
+
+StackArray<Square> notVisited;
+std::vector<Square> visited;
+std::vector<Square>::iterator visitedIterator;
+StackArray<Square> path;
+
+void bfsSetup() {
+  Square startSquare (0, 0);
+  notVisited.push(startSquare);
+}
+
+void bfs() {
+  if (!notVisited.isEmpty()) {
+    Square currSquare = notVisited.pop();
+    bool inVisited = false;
+    for (int i = 0; i < visited.size(); i++) {
+      if (currSquare == )
+    }
+  }
+  if (digitalRead(SWITCH_IN) == LOW) {
+    brake(RMOTOR_1, RMOTOR_2);
+    brake(LMOTOR_1, LMOTOR_2);
+    delay(10000000);
+  } else {
+    readSonars(sonarReadings);
+  }
+}
+*/
 
 /*
 
