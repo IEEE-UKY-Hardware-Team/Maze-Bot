@@ -29,7 +29,7 @@ NewPing sonarR(TRIGGER_PINR, ECHO_PINR, MAX_DISTANCE);
 
 int sonarReadings[3] = {0, 0, 0};
 
-void readSonars(int & sonarReadings) {
+void readSonars(int * sonarReadings) {
   sonarReadings[0] = sonarL.ping_cm();
   delay(300);
   sonarReadings[1] = sonarF.ping_cm();
@@ -49,7 +49,7 @@ void readSonars(int & sonarReadings) {
   Serial.println("cm");
 }
 
-void turnLeft(int & drivePinsL, int & drivePinsR) {
+void turnLeft(int * drivePinsL, int * drivePinsR) {
   drive(drivePinsL, -125);
   drive(drivePinsR, 125);
   delay(TURN_TIME);
@@ -58,7 +58,7 @@ void turnLeft(int & drivePinsL, int & drivePinsR) {
   delay(WAIT_TIME);
 }
 
-void turnRight(int & drivePinsL, int & drivePinsR) {
+void turnRight(int * drivePinsL, int * drivePinsR) {
   drive(drivePinsL, 125);
   drive(drivePinsR, -125);
   delay(TURN_TIME);
@@ -67,7 +67,7 @@ void turnRight(int & drivePinsL, int & drivePinsR) {
   delay(WAIT_TIME);
 }
 
-void forwardOneFoot(int & drivePinsL, int & drivePinsR, int & sonarReadings) {
+void forwardOneFoot(int * drivePinsL, int * drivePinsR, int * sonarReadings) {
   int frontReading = sonarReadings[1];
   int currReading = sonarReadings[1];
   drive(drivePinsL, 125);
@@ -81,7 +81,7 @@ void forwardOneFoot(int & drivePinsL, int & drivePinsR, int & sonarReadings) {
   delay(WAIT_TIME);
 }
 
-void reverseOneFoot(int & drivePinsL, int & drivePinsR, int & sonarReadings) {
+void reverseOneFoot(int * drivePinsL, int * drivePinsR, int * sonarReadings) {
   int frontReading = sonarReadings[1];
   int currReading = sonarReadings[1];
   drive(drivePinsL, -125);
@@ -114,20 +114,7 @@ void loop() {
     brake(LMOTOR_1, LMOTOR_2);
     delay(10000000);
   } else {
-    //both(drivePinsL, drivePinsR, 125);
-    Serial.print("Ping: ");
-    Serial.print(sonarL.ping_cm());
-    Serial.println("cm");
-
-    Serial.print("Ping: ");
-    Serial.print(sonarF.ping_cm());
-    Serial.println("cm");
-
-    Serial.print("Ping: ");
-    Serial.print(sonarR.ping_cm());
-    Serial.println("cm");
-
-    delay(1000);
+    
   }
 }
 
