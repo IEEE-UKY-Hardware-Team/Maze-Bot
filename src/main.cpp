@@ -30,23 +30,23 @@ NewPing sonarR(TRIGGER_PINR, ECHO_PINR, MAX_DISTANCE);
 int sonarReadings[3] = {0, 0, 0};
 
 void readSonars(int * sonarReadings) {
-  sonarReadings[0] = sonarL.ping_cm();
+  sonarReadings[0] = sonarL.ping_in();
   delay(300);
-  sonarReadings[1] = sonarF.ping_cm();
+  sonarReadings[1] = sonarF.ping_in();
   delay(300);
-  sonarReadings[2] = sonarR.ping_cm();
+  sonarReadings[2] = sonarR.ping_in();
 
   Serial.print("Ping: ");
   Serial.print(sonarReadings[0]);
-  Serial.println("cm");
+  Serial.println("in");
 
   Serial.print("Ping: ");
   Serial.print(sonarReadings[1]);
-  Serial.println("cm");
+  Serial.println("in");
 
   Serial.print("Ping: ");
   Serial.print(sonarReadings[2]);
-  Serial.println("cm");
+  Serial.println("in");
 }
 
 void turnLeft(int * drivePinsL, int * drivePinsR) {
@@ -72,8 +72,8 @@ void forwardOneFoot(int * drivePinsL, int * drivePinsR, int * sonarReadings) {
   int currReading = sonarReadings[1];
   drive(drivePinsL, 125);
   drive(drivePinsR, 125);
-  while (frontReading - currReading < 0.9 * 30) {
-    currReading = sonarF.ping_cm();
+  while (frontReading - currReading < 0.9 * 12) {
+    currReading = sonarF.ping_in();
     delay(300);
   }
   brake(drivePinsL[0], drivePinsL[1]);
@@ -114,7 +114,16 @@ void loop() {
     brake(LMOTOR_1, LMOTOR_2);
     delay(10000000);
   } else {
-    
+    readSonars(sonarReadings);
+    if (sonarReadings[0] > 8) { // if left is open, turn left
+      turnLeft(drivePinsL, drivePinsR);
+    } else if (sonarReadings[1] > 8) {
+      forwardOneFoot(drivePinsL, drivePinsR, sonarReadings);
+    } else if (sonarReadings[2] > 8) {
+      turnRight(drivePinsL, drivePinsR);
+    } else {
+      //panic
+    }
   }
 }
 
