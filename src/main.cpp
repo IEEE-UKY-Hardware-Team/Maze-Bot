@@ -1,5 +1,3 @@
-/*
-
 #include <Arduino.h>
 #include <NewPing.h>
 #include "drive.h"
@@ -17,6 +15,8 @@
 #define HBRIDGE_G     13
 #define SWITCH_OUT    22
 #define SWITCH_IN     23
+#define TURN_TIME     400
+#define WAIT_TIME     500
 
 #define MAX_DISTANCE 100 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
 
@@ -26,6 +26,74 @@ int drivePinsL[2] = {LMOTOR_1, LMOTOR_2};
 NewPing sonarL(TRIGGER_PINL, ECHO_PINL, MAX_DISTANCE);
 NewPing sonarF(TRIGGER_PINF, ECHO_PINF, MAX_DISTANCE);
 NewPing sonarR(TRIGGER_PINR, ECHO_PINR, MAX_DISTANCE);
+
+int sonarReadings[3] = {0, 0, 0};
+
+void readSonars(int & sonarReadings) {
+  sonarReadings[0] = sonarL.ping_cm();
+  delay(300);
+  sonarReadings[1] = sonarF.ping_cm();
+  delay(300);
+  sonarReadings[2] = sonarR.ping_cm();
+
+  Serial.print("Ping: ");
+  Serial.print(sonarReadings[0]);
+  Serial.println("cm");
+
+  Serial.print("Ping: ");
+  Serial.print(sonarReadings[1]);
+  Serial.println("cm");
+
+  Serial.print("Ping: ");
+  Serial.print(sonarReadings[2]);
+  Serial.println("cm");
+}
+
+void turnLeft(int & drivePinsL, int & drivePinsR) {
+  drive(drivePinsL, -125);
+  drive(drivePinsR, 125);
+  delay(TURN_TIME);
+  brake(drivePinsL[0], drivePinsL[1]);
+  brake(drivePinsR[0], drivePinsR[1]);
+  delay(WAIT_TIME);
+}
+
+void turnRight(int & drivePinsL, int & drivePinsR) {
+  drive(drivePinsL, 125);
+  drive(drivePinsR, -125);
+  delay(TURN_TIME);
+  brake(drivePinsL[0], drivePinsL[1]);
+  brake(drivePinsR[0], drivePinsR[1]);
+  delay(WAIT_TIME);
+}
+
+void forwardOneFoot(int & drivePinsL, int & drivePinsR, int & sonarReadings) {
+  int frontReading = sonarReadings[1];
+  int currReading = sonarReadings[1];
+  drive(drivePinsL, 125);
+  drive(drivePinsR, 125);
+  while (frontReading - currReading < 0.9 * 30) {
+    currReading = sonarF.ping_cm();
+    delay(300);
+  }
+  brake(drivePinsL[0], drivePinsL[1]);
+  brake(drivePinsR[0], drivePinsR[1]);
+  delay(WAIT_TIME);
+}
+
+void reverseOneFoot(int & drivePinsL, int & drivePinsR, int & sonarReadings) {
+  int frontReading = sonarReadings[1];
+  int currReading = sonarReadings[1];
+  drive(drivePinsL, -125);
+  drive(drivePinsR, -125);
+  while (currReading - frontReading < 0.9 * 30) {
+    currReading = sonarF.ping_cm();
+    delay(300);
+  }
+  brake(drivePinsL[0], drivePinsL[1]);
+  brake(drivePinsR[0], drivePinsR[1]);
+  delay(WAIT_TIME);
+}
 
 void setup() {
   Serial.begin(9600);
@@ -44,7 +112,7 @@ void loop() {
   if (digitalRead(SWITCH_IN) == LOW) {
     brake(RMOTOR_1, RMOTOR_2);
     brake(LMOTOR_1, LMOTOR_2);
-    delay(100);
+    delay(10000000);
   } else {
     //both(drivePinsL, drivePinsR, 125);
     Serial.print("Ping: ");
@@ -62,7 +130,8 @@ void loop() {
     delay(1000);
   }
 }
-*/
+
+/*
 
 #include <Arduino.h>
 
